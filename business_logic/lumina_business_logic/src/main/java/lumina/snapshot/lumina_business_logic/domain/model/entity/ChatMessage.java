@@ -24,4 +24,7 @@ public class ChatMessage {
     private Sources sources;
     private TokenCount tokenCount;
     private Timestamp createdAt;
+
+    private MessageId previousMessageId;  // Link to previous message (null if first)
+    private MessageId nextMessageId;      // Link to next message (null if last)
 }

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lumina.snapshot.lumina_business_logic.domain.model.valueobject.identity.PermissionId;
 
 import java.util.List;
 
@@ -12,5 +13,6 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 public class Permissions {
-    private List<String> permissionNames; // READ, WRITE, DELETE, SHARE, ADMIN
+    private PermissionId permissionId;
+    private String permissionName; // READ, WRITE, DELETE, SHARE, ADMIN
 }

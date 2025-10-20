@@ -5,10 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lumina.snapshot.lumina_business_logic.domain.model.entity.ChatMessage;
-import lumina.snapshot.lumina_business_logic.domain.model.valueobject.identity.DocumentId;
-import lumina.snapshot.lumina_business_logic.domain.model.valueobject.identity.SessionId;
-import lumina.snapshot.lumina_business_logic.domain.model.valueobject.identity.UserId;
-import lumina.snapshot.lumina_business_logic.domain.model.valueobject.identity.WorkspaceId;
+import lumina.snapshot.lumina_business_logic.domain.model.valueobject.identity.*;
 import lumina.snapshot.lumina_business_logic.domain.model.valueobject.chat.SessionTitle;
 import lumina.snapshot.lumina_business_logic.domain.model.valueobject.common.Timestamp;
 
@@ -24,8 +21,11 @@ public class ChatSession {
     private DocumentId documentId;
     private WorkspaceId workspaceId;
     private SessionTitle title;
+    private String ChatLLMModel;
     private Timestamp createdAt;
     private Timestamp lastMessageAt;
 
-    private List<ChatMessage> messages;
+    private MessageId firstMessageId;  // Head of linked list
+    private MessageId lastMessageId;   // Tail of linked list
+    private Integer messageCount;      // Track total messages
 }
