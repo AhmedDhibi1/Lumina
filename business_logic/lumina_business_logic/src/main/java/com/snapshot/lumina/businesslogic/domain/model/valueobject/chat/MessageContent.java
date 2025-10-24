@@ -1,0 +1,14 @@
+package com.snapshot.lumina.businesslogic.domain.model.valueobject.chat;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@Builder
+public class MessageContent {
+    private String value;
+}
