@@ -10,6 +10,9 @@ import com.snapshot.lumina.businesslogic.domain.model.valueobject.identity.UserI
 import com.snapshot.lumina.businesslogic.domain.model.valueobject.identity.WorkspaceId;
 import com.snapshot.lumina.businesslogic.domain.model.valueobject.workspace.WorkspaceRole;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -20,4 +23,18 @@ public class WorkspaceMember {
     private UserId userId;
     private WorkspaceRole role;
     private Timestamp joinedAt;
+
+    /*public WorkspaceMember createMember(UserId memberId,WorkspaceRole role, WorkspaceId workspaceId) {
+        if(memberId.getValue()==null){
+            throw new IllegalArgumentException("memberId must not be null");
+        }
+        WorkspaceMember member = WorkspaceMember.builder()
+                .membershipId(new MembershipId(UUID.randomUUID()))
+                .workspaceId(workspaceId)
+                .userId(memberId)
+                .role(role)
+                .joinedAt(new Timestamp(LocalDateTime.now()))
+                .build();
+        return member;
+    }*/
 }

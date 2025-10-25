@@ -42,4 +42,6 @@ public interface WorkspaceRepository {
     long countMembersByWorkspace(WorkspaceId workspaceId);
 
     long countAdminsByWorkspace(WorkspaceId workspaceId);
+
+    boolean existsByNameAndCreator(String workspaceName, UserId creatorId);
 }

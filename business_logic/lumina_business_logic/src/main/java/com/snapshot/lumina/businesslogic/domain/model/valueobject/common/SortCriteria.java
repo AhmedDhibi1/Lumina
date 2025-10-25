@@ -14,7 +14,7 @@ import java.util.Objects;
 public class SortCriteria {
 
     private final String field;
-    private final SortOrder order;
+    private final SortingOrder order;
 
     /**
      * Creates sorting criteria.
@@ -23,7 +23,7 @@ public class SortCriteria {
      * @param order the sort order (ASC or DESC)
      * @throws IllegalArgumentException if field is null or blank
      */
-    public SortCriteria(String field, SortOrder order) {
+    public SortCriteria(String field, SortingOrder order) {
         validateField(field);
         Objects.requireNonNull(order, "Sort order cannot be null");
 
@@ -35,14 +35,14 @@ public class SortCriteria {
      * Creates ascending sort criteria.
      */
     public static SortCriteria asc(String field) {
-        return new SortCriteria(field, SortOrder.ASC);
+        return new SortCriteria(field, SortingOrder.ASC);
     }
 
     /**
      * Creates descending sort criteria.
      */
     public static SortCriteria desc(String field) {
-        return new SortCriteria(field, SortOrder.DESC);
+        return new SortCriteria(field, SortingOrder.DESC);
     }
 
     private void validateField(String field) {
@@ -55,14 +55,14 @@ public class SortCriteria {
      * Checks if sorting is in ascending order.
      */
     public boolean isAscending() {
-        return order == SortOrder.ASC;
+        return order == SortingOrder.ASC;
     }
 
     /**
      * Checks if sorting is in descending order.
      */
     public boolean isDescending() {
-        return order == SortOrder.DESC;
+        return order == SortingOrder.DESC;
     }
 
     /**
@@ -76,7 +76,7 @@ public class SortCriteria {
         return field;
     }
 
-    public SortOrder getOrder() {
+    public SortingOrder getOrder() {
         return order;
     }
 
