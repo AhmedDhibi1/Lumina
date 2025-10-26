@@ -37,6 +37,7 @@ public interface WorkspaceRepository {
     Optional<WorkspaceMember> findMemberByWorkspaceAndUser(WorkspaceId workspaceId, UserId userId);
 
     boolean isMemberOfWorkspace(WorkspaceId workspaceId, UserId userId);
+    boolean isAdminOfWorkspace(WorkspaceId workspaceId, UserId userId);
 
     // Specific queries
     long countMembersByWorkspace(WorkspaceId workspaceId);

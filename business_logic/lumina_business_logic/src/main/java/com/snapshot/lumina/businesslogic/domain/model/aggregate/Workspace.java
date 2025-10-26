@@ -48,14 +48,14 @@ public class Workspace {
                 .value(UUID.randomUUID())
                 .build();
 
-        // Create the owner membership
+        // Creator starts as OWNER
         WorkspaceMember ownerMember = WorkspaceMember.builder()
                 .membershipId(MembershipId.builder()
                         .value(UUID.randomUUID())
                         .build())
                 .workspaceId(workspaceId)
                 .userId(creatorId)
-                .role(new WorkspaceRole("ADMIN"))
+                .role(new WorkspaceRole("OWNER"))
                 .joinedAt(Timestamp.builder()
                         .value(now)
                         .build())
@@ -74,7 +74,7 @@ public class Workspace {
 
     // Update workspace details
     public void updateDetails(WorkspaceName newName, Description newDescription, UserId updatedBy) {
-        validateAdminAction(updatedBy);
+        validateManagementPermission(updatedBy);
 
         if (newName != null) {
             this.workspaceName = newName;
@@ -86,17 +86,14 @@ public class Workspace {
     }
 
     public WorkspaceMember addMember(UserId userId, WorkspaceRole role, UserId addedBy) {
-        validateAdminAction(addedBy);
+        validateManagementPermission(addedBy);
 
         if (hasMember(userId)) {
             throw new IllegalArgumentException("User is already a member");
         }
 
-
         WorkspaceMember newMember = WorkspaceMember.builder()
-                .membershipId(MembershipId.builder().value(
-                        UUID.randomUUID()
-                ).build())
+                .membershipId(MembershipId.builder().value(UUID.randomUUID()).build())
                 .workspaceId(this.workspaceId)
                 .userId(userId)
                 .role(role)
@@ -110,10 +107,10 @@ public class Workspace {
     }
 
     public void removeMember(UserId userId, UserId removedBy) {
-        validateAdminAction(removedBy);
+        validateManagementPermission(removedBy);
 
-        if (userId.equals(removedBy) && isLastAdmin(userId)) {
-            throw new IllegalStateException("Cannot remove the last admin");
+        if (userId.equals(removedBy) && isLastAdminOrOwner(userId)) {
+            throw new IllegalStateException("Cannot remove the last admin/owner");
         }
 
         this.members.removeIf(m -> m.getUserId().equals(userId));
@@ -121,7 +118,7 @@ public class Workspace {
     }
 
     public void updateMemberRole(UserId userId, WorkspaceRole newRole, UserId updatedBy) {
-        validateAdminAction(updatedBy);
+        validateManagementPermission(updatedBy);
 
         if (userId.equals(updatedBy)) {
             throw new IllegalArgumentException("Cannot change your own role");
@@ -130,22 +127,42 @@ public class Workspace {
         WorkspaceMember member = findMember(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Member not found"));
 
+        // Prevent demoting the last admin/owner
+        if (member.getRole().canManageMembers() && isLastAdminOrOwner(userId)) {
+            throw new IllegalStateException("Cannot demote the last admin/owner");
+        }
+
         member.setRole(newRole);
         this.updatedAt = Timestamp.builder().value(LocalDateTime.now()).build();
     }
 
-    // Helper methods
+    // Core permission validation - DRY principle
+    private void validateManagementPermission(UserId userId) {
+        WorkspaceMember member = findMember(userId)
+                .orElseThrow(() -> new SecurityException("User is not a member of this workspace"));
 
-    private void validateAdminAction(UserId userId) {
-        if (!isAdmin(userId)) {
-            throw new SecurityException("User must be admin to perform this action");
+        if (!member.getRole().canManageMembers()) {
+            throw new SecurityException("User does not have permission to manage this workspace");
         }
     }
 
-    public boolean isAdmin(UserId userId) {
-        return members.stream()
-                .anyMatch(m -> m.getUserId().equals(userId) &&
-                        (m.getRole().toString().equals("ADMIN") || m.getRole().toString().equals("OWNER")));
+    // Helper methods using role-based checks
+    public boolean canUserManageWorkspace(UserId userId) {
+        return findMember(userId)
+                .map(member -> member.getRole().canManageWorkspace())
+                .orElse(false);
+    }
+
+    public boolean canUserManageMembers(UserId userId) {
+        return findMember(userId)
+                .map(member -> member.getRole().canManageMembers())
+                .orElse(false);
+    }
+
+    public boolean canUserManageDocuments(UserId userId) {
+        return findMember(userId)
+                .map(member -> member.getRole().canManageDocuments())
+                .orElse(false);
     }
 
     public boolean hasMember(UserId userId) {
@@ -153,17 +170,24 @@ public class Workspace {
                 .anyMatch(m -> m.getUserId().equals(userId));
     }
 
-    private boolean isLastAdmin(UserId userId) {
+    private boolean isLastAdminOrOwner(UserId userId) {
         long adminCount = members.stream()
-                .filter(m -> m.getRole().toString().equals("ADMIN")  || m.getRole().toString().equals("OWNER"))
+                .filter(m -> m.getRole().canManageMembers())
                 .count();
-        return adminCount == 1 && isAdmin(userId);
+
+        return adminCount == 1 && findMember(userId)
+                .map(m -> m.getRole().canManageMembers())
+                .orElse(false);
     }
 
     private Optional<WorkspaceMember> findMember(UserId userId) {
         return members.stream()
                 .filter(m -> m.getUserId().equals(userId))
                 .findFirst();
+    }
+
+    public Optional<WorkspaceMember> getMember(UserId userId) {
+        return findMember(userId);
     }
 
 

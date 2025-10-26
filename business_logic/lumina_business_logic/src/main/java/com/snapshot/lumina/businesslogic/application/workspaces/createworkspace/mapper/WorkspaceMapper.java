@@ -4,9 +4,11 @@ import com.snapshot.lumina.businesslogic.application.workspaces.addmember.mapper
 import com.snapshot.lumina.businesslogic.application.workspaces.createworkspace.dto.WorkspaceDetailDto;
 import com.snapshot.lumina.businesslogic.application.workspaces.createworkspace.dto.WorkspaceResponseDto;
 import com.snapshot.lumina.businesslogic.domain.model.aggregate.Workspace;
+import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
 
+@Component
 public class WorkspaceMapper {
     public static WorkspaceResponseDto toResponseDto(Workspace workspace){
         return WorkspaceResponseDto.builder()

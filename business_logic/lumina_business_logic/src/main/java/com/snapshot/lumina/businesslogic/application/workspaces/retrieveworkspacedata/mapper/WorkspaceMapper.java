@@ -9,7 +9,9 @@ import com.snapshot.lumina.businesslogic.domain.model.aggregate.Workspace;
 import com.snapshot.lumina.businesslogic.domain.model.entity.WorkspaceMember;
 import com.snapshot.lumina.businesslogic.domain.model.valueobject.common.PageResponse;
 import com.snapshot.lumina.businesslogic.domain.model.valueobject.identity.UserId;
+import org.springframework.stereotype.Component;
 
+@Component
 public class WorkspaceMapper {
 
     public static WorkspaceResponseDto toResponseDto(Workspace workspace, UserId currentUserId) {
@@ -23,7 +25,7 @@ public class WorkspaceMapper {
                 .updatedAt(workspace.getUpdatedAt().getValue())
                 .memberCount(workspace.getMembers() != null ?
                         workspace.getMembers().size() : 0)
-                .isAdmin(currentUserId != null ? workspace.isAdmin(currentUserId) : false)
+                //.isAdmin(currentUserId != null ? workspace.isAdmin(currentUserId) : false)
                 .build();
     }
 
@@ -49,7 +51,7 @@ public class WorkspaceMapper {
                 .updatedAt(workspace.getUpdatedAt().getValue())
                 .memberCount(workspace.getMembers().size())
                 .adminCount((int) adminCount)
-                .isAdmin(workspace.isAdmin(currentUserId))
+                //.isAdmin(workspace.isAdmin(currentUserId))
                 .currentUserRole(currentMember != null ?
                         currentMember.getRole().toString() : null)
                 .build();

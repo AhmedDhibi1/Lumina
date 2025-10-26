@@ -5,6 +5,7 @@ import com.snapshot.lumina.businesslogic.application.workspaces.retrieveworkspac
 import com.snapshot.lumina.businesslogic.application.workspaces.retrieveworkspacedata.dto.response.PageResponseDto;
 import com.snapshot.lumina.businesslogic.application.workspaces.retrieveworkspacedata.dto.response.WorkspaceResponseDto;
 import com.snapshot.lumina.businesslogic.application.workspaces.retrieveworkspacedata.mapper.WorkspaceMapper;
+import com.snapshot.lumina.businesslogic.domain.model.aggregate.Workspace;
 import com.snapshot.lumina.businesslogic.domain.model.valueobject.common.PageRequest;
 import com.snapshot.lumina.businesslogic.domain.model.valueobject.common.PageResponse;
 import com.snapshot.lumina.businesslogic.domain.model.valueobject.common.SortCriteria;
@@ -44,9 +45,11 @@ public class GetUserWorkspacesUseCaseImpl implements GetUserWorkspacesUseCase {
 
         // Map to DTOs
         PageResponse<WorkspaceResponseDto> dtoPage = workspacePage.map(
-                workspace -> WorkspaceMapper.toResponseDto(
-                        (com.snapshot.lumina.businesslogic.domain.model.aggregate.Workspace) workspace,
-                        userId));
+                workspace -> {
+                    WorkspaceResponseDto res= WorkspaceMapper.toResponseDto((Workspace) workspace, userId);
+                    res.setIsAdmin(workspaceRepository.isAdminOfWorkspace(((Workspace) workspace).getWorkspaceId(), userId));
+                    return res;
+                });
 
         return WorkspaceMapper.toPageResponseDto(dtoPage);
     }
