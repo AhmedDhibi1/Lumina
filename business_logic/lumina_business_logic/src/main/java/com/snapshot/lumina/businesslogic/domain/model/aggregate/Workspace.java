@@ -180,7 +180,7 @@ public class Workspace {
                 .orElse(false);
     }
 
-    private Optional<WorkspaceMember> findMember(UserId userId) {
+    public Optional<WorkspaceMember> findMember(UserId userId) {
         return members.stream()
                 .filter(m -> m.getUserId().equals(userId))
                 .findFirst();

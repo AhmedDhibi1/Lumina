@@ -48,7 +48,9 @@ public class CreateWorkspaceUseCaseImpl implements CreateWorkspaceUseCase {
         );
 
         // 5. Persist
-        Workspace savedWorkspace = workspaceRepository.save(workspace);
+        Workspace savedWorkspace = workspaceRepository.save(workspace).orElseThrow(
+                ()-> new RuntimeException("Failed to save workspace")
+        );
 
         // 6. Map to DTO and return
         return WorkspaceMapper.toResponseDto(savedWorkspace);

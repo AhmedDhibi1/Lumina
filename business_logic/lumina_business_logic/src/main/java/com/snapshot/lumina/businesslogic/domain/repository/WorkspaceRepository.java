@@ -14,7 +14,7 @@ import java.util.List;
 public interface WorkspaceRepository {
 
     // Core CRUD operations
-    Workspace save(Workspace workspace);
+    Optional<Workspace> save(Workspace workspace);
 
     Optional<Workspace> findById(WorkspaceId workspaceId);
 
@@ -29,10 +29,10 @@ public interface WorkspaceRepository {
 
     PageResponse<Workspace> findAllByMembership(UserId userId,PageRequest pageRequest);
 
-    List<Workspace> findAllByMembership(UserId userId);
+    //PageResponse<Workspace> findAllByMembership(UserId userId,PageRequest pageRequest);
 
     // Query methods for members within workspace context
-    List<WorkspaceMember> findMembersByWorkspaceId(WorkspaceId workspaceId);
+    PageResponse<WorkspaceMember> findMembersByWorkspaceId(WorkspaceId workspaceId,PageRequest pageRequest);
 
     Optional<WorkspaceMember> findMemberByWorkspaceAndUser(WorkspaceId workspaceId, UserId userId);
 

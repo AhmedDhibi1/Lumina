@@ -4,7 +4,8 @@ import com.snapshot.lumina.businesslogic.application.workspaces.retrieveworkspac
 import com.snapshot.lumina.businesslogic.application.workspaces.retrieveworkspacedata.dto.command.GetWorkspacesByCreatorQuery;
 import com.snapshot.lumina.businesslogic.application.workspaces.retrieveworkspacedata.dto.response.PageResponseDto;
 import com.snapshot.lumina.businesslogic.application.workspaces.retrieveworkspacedata.dto.response.WorkspaceResponseDto;
-import com.snapshot.lumina.businesslogic.application.workspaces.retrieveworkspacedata.mapper.WorkspaceMapper;
+import com.snapshot.lumina.businesslogic.application.workspaces.retrieveworkspacedata.mapper.WorkspaceRetrievalMapper;
+import com.snapshot.lumina.businesslogic.domain.model.aggregate.Workspace;
 import com.snapshot.lumina.businesslogic.domain.model.valueobject.common.PageRequest;
 import com.snapshot.lumina.businesslogic.domain.model.valueobject.common.PageResponse;
 import com.snapshot.lumina.businesslogic.domain.model.valueobject.common.SortCriteria;
@@ -40,11 +41,11 @@ public class GetWorkspacesByCreatorUseCaseImpl implements GetWorkspacesByCreator
                 creatorId, pageRequest);
 
         PageResponse<WorkspaceResponseDto> dtoPage = workspacePage.map(
-                workspace -> WorkspaceMapper.toResponseDto(
-                        (com.snapshot.lumina.businesslogic.domain.model.aggregate.Workspace) workspace,
+                wkSpace -> WorkspaceRetrievalMapper.toResponseDto(
+                        (Workspace) wkSpace,
                         creatorId));
 
-        return WorkspaceMapper.toPageResponseDto(dtoPage);
+        return WorkspaceRetrievalMapper.toPageResponseDto(dtoPage);
     }
 
     private PageRequest buildPageRequest(GetWorkspacesByCreatorQuery query) {

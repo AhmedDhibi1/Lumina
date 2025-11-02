@@ -8,7 +8,6 @@ import com.snapshot.lumina.businesslogic.domain.model.valueobject.identity.UserI
 import com.snapshot.lumina.businesslogic.domain.model.valueobject.identity.WorkspaceId;
 
 @EqualsAndHashCode(callSuper = true)
-@Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

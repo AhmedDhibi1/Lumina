@@ -2,8 +2,11 @@ package com.snapshot.lumina.businesslogic.domain.service.impl;
 
 import com.snapshot.lumina.businesslogic.domain.model.aggregate.Document;
 import com.snapshot.lumina.businesslogic.domain.model.aggregate.Workspace;
+import com.snapshot.lumina.businesslogic.domain.model.entity.WorkspaceMember;
 import com.snapshot.lumina.businesslogic.domain.model.valueobject.identity.UserId;
 import com.snapshot.lumina.businesslogic.domain.service.DocumentWorkspaceService;
+
+import java.util.Optional;
 
 public class DocumentWorkspaceServiceImpl implements DocumentWorkspaceService {
     @Override
@@ -14,7 +17,8 @@ public class DocumentWorkspaceServiceImpl implements DocumentWorkspaceService {
 
         // Check document ownership or workspace admin (both aggregates)
         boolean isDocumentOwner = document.isOwner(userId);
-        boolean isWorkspaceAdmin = workspace.isAdmin(userId);
+        Optional<WorkspaceMember> member = workspace.findMember(userId);
+        boolean isWorkspaceAdmin = member.map(workspaceMember -> workspaceMember.getRole().isAdmin()).orElse(false);
 
         if (!isDocumentOwner && !isWorkspaceAdmin) {
             throw new SecurityException("User must be document owner or workspace admin");
@@ -35,7 +39,8 @@ public class DocumentWorkspaceServiceImpl implements DocumentWorkspaceService {
 
         // Check document ownership or workspace admin (both aggregates)
         boolean isDocumentOwner = document.isOwner(userId);
-        boolean isWorkspaceAdmin = workspace.isAdmin(userId);
+        Optional<WorkspaceMember> member = workspace.findMember(userId);
+        boolean isWorkspaceAdmin = member.map(workspaceMember -> workspaceMember.getRole().isAdmin()).orElse(false);
 
         if (!isDocumentOwner && !isWorkspaceAdmin) {
             throw new SecurityException("User must be document owner or workspace admin");

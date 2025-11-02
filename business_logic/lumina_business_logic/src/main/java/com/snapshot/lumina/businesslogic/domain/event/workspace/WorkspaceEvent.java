@@ -9,7 +9,6 @@ import com.snapshot.lumina.businesslogic.domain.model.valueobject.identity.Works
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class WorkspaceEvent extends Event {
     private WorkspaceId workspaceId;
     private UserId ownerId;

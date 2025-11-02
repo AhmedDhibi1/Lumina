@@ -3,7 +3,7 @@ package com.snapshot.lumina.businesslogic.application.workspaces.retrieveworkspa
 import com.snapshot.lumina.businesslogic.application.workspaces.retrieveworkspacedata.GetWorkspaceUseCase;
 import com.snapshot.lumina.businesslogic.application.workspaces.retrieveworkspacedata.dto.command.GetWorkspaceQuery;
 import com.snapshot.lumina.businesslogic.application.workspaces.retrieveworkspacedata.dto.response.WorkspaceDetailDto;
-import com.snapshot.lumina.businesslogic.application.workspaces.retrieveworkspacedata.mapper.WorkspaceMapper;
+import com.snapshot.lumina.businesslogic.application.workspaces.retrieveworkspacedata.mapper.WorkspaceRetrievalMapper;
 import com.snapshot.lumina.businesslogic.domain.model.aggregate.Workspace;
 import com.snapshot.lumina.businesslogic.domain.model.valueobject.identity.UserId;
 import com.snapshot.lumina.businesslogic.domain.model.valueobject.identity.WorkspaceId;
@@ -45,7 +45,7 @@ public class GetWorkspaceUseCaseImpl implements GetWorkspaceUseCase {
                     "Access denied: User is not a member of this workspace");
         }
 
-        return WorkspaceMapper.toDetailDto(workspace, requestingUserId);
+        return WorkspaceRetrievalMapper.toDetailDto(workspace, requestingUserId);
     }
 
     private void validateQuery(GetWorkspaceQuery query) {

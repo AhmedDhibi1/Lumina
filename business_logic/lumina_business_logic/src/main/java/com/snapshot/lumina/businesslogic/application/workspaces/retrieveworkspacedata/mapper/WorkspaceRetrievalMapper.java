@@ -12,7 +12,7 @@ import com.snapshot.lumina.businesslogic.domain.model.valueobject.identity.UserI
 import org.springframework.stereotype.Component;
 
 @Component
-public class WorkspaceMapper {
+public class WorkspaceRetrievalMapper {
 
     public static WorkspaceResponseDto toResponseDto(Workspace workspace, UserId currentUserId) {
         return WorkspaceResponseDto.builder()

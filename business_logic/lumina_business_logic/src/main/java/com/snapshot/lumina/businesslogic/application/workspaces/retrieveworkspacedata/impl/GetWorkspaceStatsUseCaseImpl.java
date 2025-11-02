@@ -3,7 +3,7 @@ package com.snapshot.lumina.businesslogic.application.workspaces.retrieveworkspa
 import com.snapshot.lumina.businesslogic.application.workspaces.retrieveworkspacedata.GetWorkspaceStatsUseCase;
 import com.snapshot.lumina.businesslogic.application.workspaces.retrieveworkspacedata.dto.command.GetWorkspaceStatsQuery;
 import com.snapshot.lumina.businesslogic.application.workspaces.retrieveworkspacedata.dto.response.WorkspaceStatsDto;
-import com.snapshot.lumina.businesslogic.application.workspaces.retrieveworkspacedata.mapper.WorkspaceMapper;
+import com.snapshot.lumina.businesslogic.application.workspaces.retrieveworkspacedata.mapper.WorkspaceRetrievalMapper;
 import com.snapshot.lumina.businesslogic.domain.model.aggregate.Workspace;
 import com.snapshot.lumina.businesslogic.domain.model.valueobject.identity.UserId;
 import com.snapshot.lumina.businesslogic.domain.model.valueobject.identity.WorkspaceId;
@@ -48,7 +48,7 @@ public class GetWorkspaceStatsUseCaseImpl implements GetWorkspaceStatsUseCase {
         long totalMembers = workspaceRepository.countMembersByWorkspace(workspaceId);
         long totalAdmins = workspaceRepository.countAdminsByWorkspace(workspaceId);
 
-        return WorkspaceMapper.toStatsDto(workspace, totalMembers, totalAdmins);
+        return WorkspaceRetrievalMapper.toStatsDto(workspace, totalMembers, totalAdmins);
     }
 
     private void validateQuery(GetWorkspaceStatsQuery query) {

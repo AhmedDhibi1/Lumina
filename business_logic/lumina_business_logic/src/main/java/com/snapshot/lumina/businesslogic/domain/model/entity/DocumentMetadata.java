@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 import com.snapshot.lumina.businesslogic.domain.model.valueobject.common.Timestamp;
 import com.snapshot.lumina.businesslogic.domain.model.valueobject.identity.DocumentId;
 import com.snapshot.lumina.businesslogic.domain.model.valueobject.identity.MetadataId;
-import lumina.snapshot.lumina.businesslogic.domain.model.valueobject.metadata.*;
-import lumina.snapshot.lumina_business_logic.domain.model.valueobject.metadata.*;
+import com.snapshot.lumina.businesslogic.domain.model.valueobject.metadata.*;
+import com.snapshot.lumina.businesslogic.domain.model.valueobject.metadata.*;
 
 @Data
 @Builder

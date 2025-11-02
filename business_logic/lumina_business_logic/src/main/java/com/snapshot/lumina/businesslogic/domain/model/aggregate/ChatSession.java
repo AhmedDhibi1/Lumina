@@ -5,8 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lumina.snapshot.lumina.businesslogic.domain.model.valueobject.identity.*;
-import lumina.snapshot.lumina_business_logic.domain.model.valueobject.identity.*;
+import com.snapshot.lumina.businesslogic.domain.model.valueobject.identity.*;
+//import com.snapshot.lumina.businesslogic.domain.model.valueobject.identity.*;
 import com.snapshot.lumina.businesslogic.domain.model.valueobject.chat.SessionTitle;
 import com.snapshot.lumina.businesslogic.domain.model.valueobject.common.Timestamp;
 

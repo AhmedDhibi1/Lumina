@@ -38,19 +38,19 @@ public class WorkspaceRole {
 
     // Permission checks
     public boolean isOwner() {
-        return "OWNER".equals(role);
+        return "OWNER".equals(this.role);
     }
 
     public boolean isAdmin() {
-        return "ADMIN".equals(role);
+        return "ADMIN".equals(this.role);
     }
 
     public boolean isMember() {
-        return "MEMBER".equals(role);
+        return "MEMBER".equals(this.role);
     }
 
     public boolean isViewer() {
-        return "VIEWER".equals(role);
+        return "VIEWER".equals(this.role);
     }
 
     // High-level permission methods

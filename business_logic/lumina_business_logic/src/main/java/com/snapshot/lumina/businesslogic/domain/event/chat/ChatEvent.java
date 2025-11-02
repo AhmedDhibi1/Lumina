@@ -10,7 +10,6 @@ import com.snapshot.lumina.businesslogic.domain.model.valueobject.identity.UserI
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class ChatEvent extends Event {
     private SessionId sessionId;
     private UserId userId;
