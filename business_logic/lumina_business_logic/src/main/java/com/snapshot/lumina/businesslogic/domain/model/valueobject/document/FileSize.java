@@ -1,17 +1,15 @@
 package com.snapshot.lumina.businesslogic.domain.model.valueobject.document;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+@Value
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class FileSize {
     private Long bytes;
 
-    // Validate file size limits
+    public FileSize(Long bytes) {
+        this.bytes = bytes;
+    }
+// Validate file size limits
     //void validateFileSize(FileSize fileSize);
 }

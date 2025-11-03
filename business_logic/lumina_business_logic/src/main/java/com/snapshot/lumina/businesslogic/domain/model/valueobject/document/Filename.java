@@ -1,17 +1,36 @@
 package com.snapshot.lumina.businesslogic.domain.model.valueobject.document;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
-@AllArgsConstructor
+@Value
 @Builder
-@NoArgsConstructor
 public class Filename {
-    private String value;
+    String value;
 
-    // Validate filename
-    //void validateFilename(Filename filename);
+
+    // Validation in constructor
+    private Filename(String value) {
+        if (value == null || value.isBlank()) {
+            throw new IllegalArgumentException("Filename cannot be blank");
+        }
+        if (value.length() > 255) {
+            throw new IllegalArgumentException("Filename too long");
+        }
+        this.value = value.trim();
+    }
+
+    // Factory method
+    public static Filename of(String value) {
+        return new Filename(value);
+    }
+
+    // Business methods (return new instances)
+    public Filename withExtension(String extension) {
+        return new Filename(value + "." + extension);
+    }
+
+    public String getExtension() {
+        int dotIndex = value.lastIndexOf('.');
+        return dotIndex > 0 ? value.substring(dotIndex + 1) : "";
+    }
 }

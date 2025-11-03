@@ -1,14 +1,13 @@
 package com.snapshot.lumina.businesslogic.domain.model.valueobject.metadata;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+@Value
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
 public class Author {
-    private String value;
+    String value;
+
+    public Author(String value) {
+        this.value = value;
+    }
 }

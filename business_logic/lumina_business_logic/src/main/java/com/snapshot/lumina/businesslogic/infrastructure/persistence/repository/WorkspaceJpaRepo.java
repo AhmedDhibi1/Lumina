@@ -33,4 +33,6 @@ public interface WorkspaceJpaRepo extends JpaRepository<WorkspaceEntity, UUID> {
     Page<WorkspaceEntity> findAllUserMembershipWorkspaces(@Param("userId")UUID userId, Pageable pageable);
 
     Page<WorkspaceMemberEntity> findByWorkspace_WorkspaceId(UUID workspaceId, Pageable pageable);
+
+    boolean existsByWorkspaceName(String workspaceName);
 }

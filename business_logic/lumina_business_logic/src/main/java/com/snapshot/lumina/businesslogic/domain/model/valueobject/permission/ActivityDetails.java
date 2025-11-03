@@ -1,14 +1,13 @@
 package com.snapshot.lumina.businesslogic.domain.model.valueobject.permission;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Value
 @Builder
 public class ActivityDetails {
-    private String jsonData;
+    String jsonData;
+
+    public ActivityDetails(String jsonData) {
+        this.jsonData = jsonData;
+    }
 }

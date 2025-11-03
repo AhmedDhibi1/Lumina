@@ -1,14 +1,13 @@
 package com.snapshot.lumina.businesslogic.domain.model.valueobject.tagging;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Builder
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Value
 public class TagName {
-    private String value;
+    String value;
+
+    public TagName(String value) {
+        this.value = value;
+    }
 }

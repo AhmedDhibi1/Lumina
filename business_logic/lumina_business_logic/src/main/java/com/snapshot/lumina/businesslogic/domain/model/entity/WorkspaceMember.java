@@ -11,6 +11,7 @@ import com.snapshot.lumina.businesslogic.domain.model.valueobject.identity.Works
 import com.snapshot.lumina.businesslogic.domain.model.valueobject.workspace.WorkspaceRole;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 @Data
@@ -23,4 +24,16 @@ public class WorkspaceMember {
     private UserId userId;
     private WorkspaceRole role;
     private Timestamp joinedAt;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof WorkspaceMember that)) return false;
+        return Objects.equals(membershipId, that.membershipId);  // ✅ Null-safe
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(membershipId);  // ✅ Null-safe
+    }
 }

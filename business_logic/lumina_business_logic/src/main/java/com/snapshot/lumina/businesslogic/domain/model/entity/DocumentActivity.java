@@ -11,6 +11,8 @@ import com.snapshot.lumina.businesslogic.domain.model.valueobject.identity.UserI
 import com.snapshot.lumina.businesslogic.domain.model.valueobject.permission.ActivityDetails;
 import com.snapshot.lumina.businesslogic.domain.model.valueobject.permission.ActivityType;
 
+import java.util.Objects;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -22,4 +24,16 @@ public class DocumentActivity {
     private ActivityType activityType;
     private ActivityDetails details;
     private Timestamp timestamp;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof DocumentActivity that)) return false;
+        return Objects.equals(activityId, that.activityId);  // ✅ Null-safe
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(activityId);  // ✅ Null-safe
+    }
 }

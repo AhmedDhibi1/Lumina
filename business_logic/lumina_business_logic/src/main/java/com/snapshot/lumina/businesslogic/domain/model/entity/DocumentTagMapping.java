@@ -9,6 +9,8 @@ import com.snapshot.lumina.businesslogic.domain.model.valueobject.identity.Docum
 import com.snapshot.lumina.businesslogic.domain.model.valueobject.identity.TagId;
 import com.snapshot.lumina.businesslogic.domain.model.valueobject.identity.UserId;
 
+import java.util.Objects;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -18,4 +20,16 @@ public class DocumentTagMapping {
     private TagId tagId;
     private UserId taggedBy;
     private Timestamp taggedAt;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof DocumentTagMapping that)) return false;
+        return Objects.equals(documentId, that.documentId);  // ✅ Null-safe
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(documentId);  // ✅ Null-safe
+    }
 }

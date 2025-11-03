@@ -1,14 +1,13 @@
 package com.snapshot.lumina.businesslogic.domain.model.valueobject.versioning;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+@Value
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class ChangeDescription {
-    private String value;
+    String value;
+
+    public ChangeDescription(String value) {
+        this.value = value;
+    }
 }

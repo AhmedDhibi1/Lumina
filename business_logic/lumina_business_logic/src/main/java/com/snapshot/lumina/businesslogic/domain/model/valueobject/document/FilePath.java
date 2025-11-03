@@ -1,14 +1,13 @@
 package com.snapshot.lumina.businesslogic.domain.model.valueobject.document;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Value
 @Builder
 public class FilePath {
-    private String value;
+    String value;
+
+    public FilePath(String value) {
+        this.value = value;
+    }
 }

@@ -1,19 +1,19 @@
 package com.snapshot.lumina.businesslogic.domain.model.valueobject.permission;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import com.snapshot.lumina.businesslogic.domain.model.valueobject.identity.PermissionId;
 
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
+@Value
 public class Permission {
 
-    private PermissionId permissionId;
-    private PermissionName permissionName;
+    PermissionId permissionId;
+    PermissionName permissionName;
+
+    public Permission(PermissionId permissionId, PermissionName permissionName) {
+        this.permissionId = permissionId;
+        this.permissionName = permissionName;
+    }
 
     @Override
     public boolean equals(Object o) {

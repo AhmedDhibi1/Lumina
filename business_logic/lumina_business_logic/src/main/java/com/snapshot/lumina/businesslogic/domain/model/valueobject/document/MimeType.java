@@ -1,16 +1,15 @@
 package com.snapshot.lumina.businesslogic.domain.model.valueobject.document;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Value
 @Builder
 public class MimeType {
-    private String value;
-    // Validate file type
+    String value;
+
+    public MimeType(String value) {
+        this.value = value;
+    }
+// Validate file type
     //void validateFileType(MimeType mimeType);
 }

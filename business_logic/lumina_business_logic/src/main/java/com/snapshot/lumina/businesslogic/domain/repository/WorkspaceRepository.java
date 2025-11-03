@@ -34,15 +34,4 @@ public interface WorkspaceRepository {
     // Query methods for members within workspace context
     PageResponse<WorkspaceMember> findMembersByWorkspaceId(WorkspaceId workspaceId,PageRequest pageRequest);
 
-    Optional<WorkspaceMember> findMemberByWorkspaceAndUser(WorkspaceId workspaceId, UserId userId);
-
-    boolean isMemberOfWorkspace(WorkspaceId workspaceId, UserId userId);
-    boolean isAdminOfWorkspace(WorkspaceId workspaceId, UserId userId);
-
-    // Specific queries
-    long countMembersByWorkspace(WorkspaceId workspaceId);
-
-    long countAdminsByWorkspace(WorkspaceId workspaceId);
-
-    boolean existsByNameAndCreator(String workspaceName, UserId creatorId);
 }

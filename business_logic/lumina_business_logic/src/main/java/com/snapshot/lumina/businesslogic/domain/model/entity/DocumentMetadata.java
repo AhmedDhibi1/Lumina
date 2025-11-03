@@ -11,6 +11,8 @@ import com.snapshot.lumina.businesslogic.domain.model.valueobject.identity.Metad
 import com.snapshot.lumina.businesslogic.domain.model.valueobject.metadata.*;
 import com.snapshot.lumina.businesslogic.domain.model.valueobject.metadata.*;
 
+import java.util.Objects;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -24,6 +26,18 @@ public class DocumentMetadata {
     private Keywords keywords;
     private Summary summary;
     private Language language;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof DocumentMetadata that)) return false;
+        return Objects.equals(metadataId, that.metadataId);  // ✅ Null-safe
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(metadataId);  // ✅ Null-safe
+    }
 
     /*// Extract and create metadata from document
     DocumentMetadata extractMetadata(DocumentId documentId, FilePath filePath);

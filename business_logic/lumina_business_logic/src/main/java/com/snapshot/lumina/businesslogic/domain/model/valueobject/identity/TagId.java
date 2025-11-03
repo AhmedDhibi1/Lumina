@@ -1,16 +1,15 @@
 package com.snapshot.lumina.businesslogic.domain.model.valueobject.identity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.UUID;
 
-@Data
+@Value
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
 public class TagId {
-    private UUID tagId;
+    UUID tagId;
+
+    public TagId(UUID tagId) {
+        this.tagId = tagId;
+    }
 }

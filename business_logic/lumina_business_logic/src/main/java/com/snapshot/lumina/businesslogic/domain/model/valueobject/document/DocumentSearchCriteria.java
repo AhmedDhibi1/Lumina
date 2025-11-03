@@ -1,9 +1,6 @@
 package com.snapshot.lumina.businesslogic.domain.model.valueobject.document;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import com.snapshot.lumina.businesslogic.domain.model.valueobject.common.Timestamp;
 import com.snapshot.lumina.businesslogic.domain.model.valueobject.identity.TagId;
 import com.snapshot.lumina.businesslogic.domain.model.valueobject.identity.WorkspaceId;
@@ -12,19 +9,41 @@ import com.snapshot.lumina.businesslogic.domain.model.valueobject.metadata.Keywo
 
 import java.util.List;
 
-@Data
+@Value
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
 public class DocumentSearchCriteria {
-    private Filename filename;
-    private Author author;
-    private Keywords keywords;
-    private List<TagId> tagIds;
-    private DocumentStatus status;
-    private Timestamp uploadedAfter;
-    private Timestamp uploadedBefore;
-    private FileSize minSize;
-    private FileSize maxSize;
-    private WorkspaceId workspaceId;
+    Filename filename;
+    Author author;
+    Keywords keywords;
+    List<TagId> tagIds;
+    DocumentStatus status;
+    Timestamp uploadedAfter;
+    Timestamp uploadedBefore;
+    FileSize minSize;
+    FileSize maxSize;
+    WorkspaceId workspaceId;
+
+    public DocumentSearchCriteria(
+            Timestamp uploadedBefore,
+            Filename filename,
+            Author author,
+            Keywords keywords,
+            DocumentStatus status,
+            List<TagId> tagIds,
+            Timestamp uploadedAfter,
+            FileSize minSize,
+            FileSize maxSize,
+            WorkspaceId workspaceId
+    ) {
+        this.uploadedBefore = uploadedBefore;
+        this.filename = filename;
+        this.author = author;
+        this.keywords = keywords;
+        this.status = status;
+        this.tagIds = tagIds;
+        this.uploadedAfter = uploadedAfter;
+        this.minSize = minSize;
+        this.maxSize = maxSize;
+        this.workspaceId = workspaceId;
+    }
 }

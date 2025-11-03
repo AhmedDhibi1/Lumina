@@ -1,10 +1,7 @@
 package com.snapshot.lumina.businesslogic.domain.model.aggregate;
 
 import com.snapshot.lumina.businesslogic.domain.model.valueobject.document.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import com.snapshot.lumina.businesslogic.domain.model.entity.DocumentACL;
 import com.snapshot.lumina.businesslogic.domain.model.entity.DocumentMetadata;
 import com.snapshot.lumina.businesslogic.domain.model.entity.DocumentOwnership;
@@ -29,7 +26,7 @@ import java.util.stream.Collectors;
 
 import static com.snapshot.lumina.businesslogic.domain.model.valueobject.permission.Permission.PermissionName.*;
 
-@Data
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -253,6 +250,7 @@ public class Document {
             WorkspaceId workspaceId) {
 
         LocalDateTime now = LocalDateTime.now();
+        DocumentStatus pendingStatus= DocumentStatus.pending();
 
         return Document.builder()
                 .documentId(DocumentId.builder().value(UUID.randomUUID()).build())
@@ -262,7 +260,7 @@ public class Document {
                 .mimeType(mimeType)
                 .ownerId(ownerId)
                 .workspaceId(workspaceId)
-                .status(new DocumentStatus("pending"))
+                .status(pendingStatus)
                 .createdAt(Timestamp.builder().value(now).build())
                 .updatedAt(Timestamp.builder().value(now).build())
                 .accessControlList(new ArrayList<>())
@@ -275,44 +273,43 @@ public class Document {
      * Mark document as processing
      */
     public void markAsProcessing() {
-        if (this.status.getStatus().equals("archived")) {
-            throw new IllegalStateException("Cannot process archived document");
-        }
-        this.status.setStatus("processing");
-        this.updatedAt = Timestamp.builder().value(LocalDateTime.now()).build();
+        DocumentStatus newStatus = DocumentStatus.processing();
+        this.status.validateTransition(newStatus);  // ✅ Validated
+        this.status = newStatus;  // ✅ New immutable instance
+        this.updatedAt = Timestamp.now();
     }
 
     /**
      * Mark document as indexed (after embeddings created)
      */
-    public void markAsIndexed(ChunkCount chunkCount, EmbeddingModel embeddingModel) {
-        if (!this.status.getStatus().equals("processing")) {
-            throw new IllegalStateException("Document must be in PROCESSING state to mark as indexed");
-        }
-        this.status.setStatus("indexed");
+    public void markAsIndexed(ChunkCount chunkCount, EmbeddingModel model) {
+        DocumentStatus newStatus = DocumentStatus.indexed();
+        this.status.validateTransition(newStatus);  // ✅ Validated
+        this.status = newStatus;  // ✅ New immutable instance
         this.chunkCount = chunkCount;
-        this.embeddingModel = embeddingModel;
-        this.indexedAt = Timestamp.builder().value(LocalDateTime.now()).build();
-        this.updatedAt = Timestamp.builder().value(LocalDateTime.now()).build();
+        this.embeddingModel = model;
+        this.indexedAt = Timestamp.now();
+        this.updatedAt = Timestamp.now();
     }
 
     /**
      * Mark document as failed
      */
     public void markAsFailed(String errorMessage) {
-        this.status.setStatus("failed");
-        // Store error message in metadata if needed
-        this.updatedAt = Timestamp.builder().value(LocalDateTime.now()).build();
+        DocumentStatus newStatus = DocumentStatus.failed();
+        this.status.validateTransition(newStatus);  // ✅ Validated
+        this.status = newStatus;  // ✅ New immutable instance
+        this.updatedAt = Timestamp.now();
     }
 
     /**
      * Archive document (soft delete)
      */
     public void archiveDocument(UserId requesterId) {
-        enforceAccess(requesterId, new Permission(null,new Permission.PermissionName("DELETE")));
-
-        this.status.setStatus("archived");
-        this.updatedAt = Timestamp.builder().value(LocalDateTime.now()).build();
+        DocumentStatus newStatus = DocumentStatus.archived();
+        this.status.validateTransition(newStatus);  // ✅ Validated
+        this.status = newStatus;  // ✅ New immutable instance
+        this.updatedAt = Timestamp.now();
     }
 
     /**
@@ -323,12 +320,13 @@ public class Document {
             throw new SecurityException("Only owner can restore document");
         }
 
-        if (!this.status.getStatus().equals("archived")) {
+        if (!this.status.isArchived()) {
             throw new IllegalStateException("Only archived documents can be restored");
         }
-
-        this.status.setStatus("pending");
-        this.updatedAt = Timestamp.builder().value(LocalDateTime.now()).build();
+        DocumentStatus newStatus = DocumentStatus.pending();
+        this.status.validateTransition(newStatus);  // ✅ Validated
+        this.status = newStatus;
+        this.updatedAt = Timestamp.now();
     }
 
     // ============================================

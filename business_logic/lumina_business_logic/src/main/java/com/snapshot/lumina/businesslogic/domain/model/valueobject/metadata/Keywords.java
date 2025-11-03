@@ -1,16 +1,15 @@
 package com.snapshot.lumina.businesslogic.domain.model.valueobject.metadata;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
 @Builder
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Value
 public class Keywords {
-    private List<String> values;
+    List<String> values;
+
+    public Keywords(List<String> values) {
+        this.values = values;
+    }
 }

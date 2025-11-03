@@ -57,17 +57,17 @@ public class WorkspaceRepositoryAdapter implements WorkspaceRepository {
 
     @Override
     public boolean existsById(WorkspaceId workspaceId) {
-        return false;
+        return workspaceJpaRepo.existsById(workspaceId.getValue());
     }
 
     @Override
     public boolean existsByName(WorkspaceName workspaceName) {
-        return false;
+        return workspaceJpaRepo.existsByWorkspaceName(workspaceName.getValue());
     }
 
     @Override
     public void delete(WorkspaceId workspaceId) {
-
+        workspaceJpaRepo.deleteById(workspaceId.getValue());
     }
 
     @Override
@@ -107,33 +107,5 @@ public class WorkspaceRepositoryAdapter implements WorkspaceRepository {
         return PageResponse.of(members, pageRequest, entityPage.getTotalElements());
     }
 
-    @Override
-    public Optional<WorkspaceMember> findMemberByWorkspaceAndUser(WorkspaceId workspaceId, UserId userId) {
-        return Optional.empty();
-    }
 
-    @Override
-    public boolean isMemberOfWorkspace(WorkspaceId workspaceId, UserId userId) {
-        return false;
-    }
-
-    @Override
-    public boolean isAdminOfWorkspace(WorkspaceId workspaceId, UserId userId) {
-        return false;
-    }
-
-    @Override
-    public long countMembersByWorkspace(WorkspaceId workspaceId) {
-        return 0;
-    }
-
-    @Override
-    public long countAdminsByWorkspace(WorkspaceId workspaceId) {
-        return 0;
-    }
-
-    @Override
-    public boolean existsByNameAndCreator(String workspaceName, UserId creatorId) {
-        return false;
-    }
 }

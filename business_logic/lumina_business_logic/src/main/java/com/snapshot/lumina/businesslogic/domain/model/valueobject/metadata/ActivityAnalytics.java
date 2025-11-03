@@ -1,25 +1,39 @@
 package com.snapshot.lumina.businesslogic.domain.model.valueobject.metadata;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import com.snapshot.lumina.businesslogic.domain.model.valueobject.common.Timestamp;
 import com.snapshot.lumina.businesslogic.domain.model.valueobject.identity.DocumentId;
 import com.snapshot.lumina.businesslogic.domain.model.valueobject.identity.UserId;
 
 import java.util.List;
 
-@Data
+@Value
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
+
 public class ActivityAnalytics {
-    private DocumentId documentId;
-    private Integer totalViews;
-    private Integer totalDownloads;
-    private Integer totalShares;
-    private List<UserId> topAccessors;
-    private Timestamp lastAccessed;
-    private Timestamp createdAt;
+    DocumentId documentId;
+    Integer totalViews;
+    Integer totalDownloads;
+    Integer totalShares;
+    List<UserId> topAccessors;
+    Timestamp lastAccessed;
+    Timestamp createdAt;
+
+    public ActivityAnalytics(
+            DocumentId documentId,
+            Integer totalViews,
+            Integer totalShares,
+            List<UserId> topAccessors,
+            Timestamp lastAccessed,
+            Integer totalDownloads,
+            Timestamp createdAt
+    ) {
+        this.documentId = documentId;
+        this.totalViews = totalViews;
+        this.totalShares = totalShares;
+        this.totalDownloads = totalDownloads;
+        this.topAccessors = topAccessors;
+        this.lastAccessed = lastAccessed;
+        this.createdAt = createdAt;
+    }
 }

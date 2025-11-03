@@ -9,6 +9,8 @@ import com.snapshot.lumina.businesslogic.domain.model.valueobject.identity.TagId
 import com.snapshot.lumina.businesslogic.domain.model.valueobject.tagging.Color;
 import com.snapshot.lumina.businesslogic.domain.model.valueobject.tagging.TagName;
 
+import java.util.Objects;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -18,6 +20,18 @@ public class DocumentTag {
     private TagName tagName;
     private Color color;
     private Timestamp createdAt;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof DocumentTag that)) return false;
+        return Objects.equals(tagId, that.tagId);  // ✅ Null-safe
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(tagId);  // ✅ Null-safe
+    }
 
     /*// Create new tag
     DocumentTag createTag(TagName name, Color color);

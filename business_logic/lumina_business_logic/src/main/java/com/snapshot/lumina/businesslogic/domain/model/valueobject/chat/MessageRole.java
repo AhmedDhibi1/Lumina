@@ -1,14 +1,12 @@
 package com.snapshot.lumina.businesslogic.domain.model.valueobject.chat;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Value
 @Builder
 public class MessageRole {
-    private String role; // USER, ASSISTANT
+    String role; // USER, ASSISTANT
+    public MessageRole(String role) {
+        this.role = role;
+    }
 }

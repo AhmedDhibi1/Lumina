@@ -1,14 +1,14 @@
 package com.snapshot.lumina.businesslogic.domain.model.valueobject.chat;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+@Value
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
+
 public class Sources {
-    private String jsonData; // JSON array of source references
+    public Sources(String jsonData) {
+        this.jsonData = jsonData;
+    }
+
+    String jsonData; // JSON array of source references
 }

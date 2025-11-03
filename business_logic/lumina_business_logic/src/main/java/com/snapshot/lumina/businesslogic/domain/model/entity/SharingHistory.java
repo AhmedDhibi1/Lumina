@@ -10,6 +10,8 @@ import com.snapshot.lumina.businesslogic.domain.model.valueobject.identity.Share
 import com.snapshot.lumina.businesslogic.domain.model.valueobject.identity.UserId;
 import com.snapshot.lumina.businesslogic.domain.model.valueobject.permission.Permission;
 
+import java.util.Objects;
+
 @Builder
 @Data
 @AllArgsConstructor
@@ -22,4 +24,16 @@ public class SharingHistory {
     private Permission permissions;
     private Timestamp sharedAt;
     private Timestamp revokedAt;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SharingHistory that)) return false;
+        return Objects.equals(shareId, that.shareId);  // ✅ Null-safe
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(shareId);  // ✅ Null-safe
+    }
 }

@@ -9,7 +9,6 @@ import java.util.Set;
 
 // domain/model/valueobject/workspace/WorkspaceRole.java
 //@AllArgsConstructor
-@NoArgsConstructor
 @Data
 @Builder
 public class WorkspaceRole {

@@ -1,16 +1,16 @@
 package com.snapshot.lumina.businesslogic.domain.model.valueobject.identity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.UUID;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
+
+@Value
 @Builder
 public class PermissionId {
-    private UUID id;
+    UUID id;
+
+    public PermissionId(UUID id) {
+        this.id = id;
+    }
 }

@@ -1,14 +1,13 @@
 package com.snapshot.lumina.businesslogic.domain.model.valueobject.chat;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
+@Value
 @Builder
 public class SessionTitle {
-    private String value;
+    String value;
+
+    public SessionTitle(String value) {
+        this.value = value;
+    }
 }

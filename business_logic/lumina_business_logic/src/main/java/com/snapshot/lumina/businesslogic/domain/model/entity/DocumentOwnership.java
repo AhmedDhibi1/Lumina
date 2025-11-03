@@ -9,6 +9,8 @@ import com.snapshot.lumina.businesslogic.domain.model.valueobject.identity.Docum
 import com.snapshot.lumina.businesslogic.domain.model.valueobject.identity.OwnershipId;
 import com.snapshot.lumina.businesslogic.domain.model.valueobject.identity.UserId;
 
+import java.util.Objects;
+
 @Builder
 @Data
 @NoArgsConstructor
@@ -19,6 +21,18 @@ public class DocumentOwnership {
     private UserId ownerId;
     private Boolean isPrimaryOwner;
     private Timestamp acquiredAt;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof DocumentOwnership that)) return false;
+        return Objects.equals(ownershipId, that.ownershipId);  // ✅ Null-safe
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(ownershipId);  // ✅ Null-safe
+    }
 
    /* // Transfer primary ownership to another user
     DocumentOwnership transferOwnership(DocumentId documentId, UserId currentOwnerId, UserId newOwnerId);

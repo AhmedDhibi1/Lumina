@@ -12,6 +12,7 @@ import com.snapshot.lumina.businesslogic.domain.model.valueobject.permission.Per
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Data
 @Builder
@@ -25,6 +26,18 @@ public class DocumentACL {
     private UserId grantedBy;
     private Timestamp grantedAt;
     private Timestamp expiresAt;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof DocumentACL that)) return false;
+        return Objects.equals(aclId, that.aclId);  // ✅ Null-safe
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(aclId);  // ✅ Null-safe
+    }
 
     // Check if user has specific permission on document
     public boolean hasPermission(Permission permission) {

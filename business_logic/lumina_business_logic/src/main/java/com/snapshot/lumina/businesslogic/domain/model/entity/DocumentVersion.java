@@ -13,6 +13,8 @@ import com.snapshot.lumina.businesslogic.domain.model.valueobject.identity.Versi
 import com.snapshot.lumina.businesslogic.domain.model.valueobject.versioning.ChangeDescription;
 import com.snapshot.lumina.businesslogic.domain.model.valueobject.versioning.VersionNumber;
 
+import java.util.Objects;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -26,6 +28,18 @@ public class DocumentVersion {
     private UserId uploadedBy;
     private Timestamp createdAt;
     private ChangeDescription changeDescription;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof DocumentVersion that)) return false;
+        return Objects.equals(versionId, that.versionId);  // ✅ Null-safe
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(versionId);  // ✅ Null-safe
+    }
 
     /*// Create new version of document
     DocumentVersion createNewVersion(DocumentId documentId, FilePath newFilePath, FileSize fileSize, UserId uploadedBy, ChangeDescription description);

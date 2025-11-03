@@ -1,10 +1,7 @@
 package com.snapshot.lumina.businesslogic.domain.model.aggregate;
 
 import com.snapshot.lumina.businesslogic.domain.model.valueobject.identity.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import com.snapshot.lumina.businesslogic.domain.model.valueobject.identity.*;
 //import com.snapshot.lumina.businesslogic.domain.model.valueobject.identity.*;
 import com.snapshot.lumina.businesslogic.domain.model.valueobject.chat.SessionTitle;
@@ -13,7 +10,7 @@ import com.snapshot.lumina.businesslogic.domain.model.valueobject.common.Timesta
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
 public class ChatSession {
     private SessionId sessionId;
     private UserId userId;

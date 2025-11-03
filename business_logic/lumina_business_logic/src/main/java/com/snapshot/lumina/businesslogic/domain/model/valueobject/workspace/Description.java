@@ -1,14 +1,13 @@
 package com.snapshot.lumina.businesslogic.domain.model.valueobject.workspace;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@AllArgsConstructor
 @Builder
-@Data
-@NoArgsConstructor
+@Value
 public class Description {
-    private String value;
+    String value;
+
+    public Description(String value) {
+        this.value = value;
+    }
 }

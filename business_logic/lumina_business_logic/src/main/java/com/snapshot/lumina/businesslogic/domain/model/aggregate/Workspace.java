@@ -1,9 +1,6 @@
 package com.snapshot.lumina.businesslogic.domain.model.aggregate;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import com.snapshot.lumina.businesslogic.domain.model.entity.WorkspaceMember;
 import com.snapshot.lumina.businesslogic.domain.model.valueobject.common.Timestamp;
 import com.snapshot.lumina.businesslogic.domain.model.valueobject.identity.MembershipId;
@@ -19,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@Data
+@Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
