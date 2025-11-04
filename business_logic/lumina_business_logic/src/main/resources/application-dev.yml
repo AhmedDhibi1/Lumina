@@ -1,21 +1,29 @@
 spring:
+  config:
+    activate:
+      on-profile: dev
+
   datasource:
     url: jdbc:postgresql://localhost:5432/lumina_dev
     username: dev_user
     password: dev_password
-    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 5
 
   jpa:
-    hibernate:
-      ddl-auto: validate  # Important: Use 'validate' with Flyway
     show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
 
-  flyway:
-    clean-disabled: false  # Allow clean in dev (careful!)
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password:
 
 logging:
   level:
-    root: INFO
     com.snapshot.lumina: DEBUG
+    org.springframework.cache: DEBUG
     org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
