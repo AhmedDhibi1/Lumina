@@ -1,18 +1,24 @@
 package com.snapshot.lumina.businesslogic.application.workspaces.createworkspace.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.snapshot.lumina.businesslogic.domain.model.valueobject.identity.UserId;
+import com.snapshot.lumina.businesslogic.domain.model.valueobject.workspace.Description;
+import com.snapshot.lumina.businesslogic.domain.model.valueobject.workspace.WorkspaceName;
+import lombok.*;
 
 import java.util.UUID;
 
-@Data
+@Value
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
 public class CreateWorkspaceCommand {
-    private String workspaceName;
-    private String description;
-    private UUID creatorUserId;
+    WorkspaceName workspaceName;
+    Description description;
+    UserId creatorUserId;
+
+    public static CreateWorkspaceCommand of(String name, String desc, UUID userId) {
+        return new CreateWorkspaceCommand(
+                WorkspaceName.of(name),
+                desc != null ? Description.of(desc) : null,
+                UserId.of(userId)
+        );
+    }
 }

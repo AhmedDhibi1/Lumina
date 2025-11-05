@@ -60,7 +60,10 @@ public class WorkspaceRepositoryAdapter implements WorkspaceRepository {
     @Caching(evict = {
             @CacheEvict(value = "workspaces", key = "#workspace.workspaceId.value"),
             @CacheEvict(value = "workspacesByUser", allEntries = true),
-            @CacheEvict(value = "workspaceExists", key = "#workspace.workspaceId.value")
+            @CacheEvict(value = "workspaceExists", key = "#workspace.workspaceId.value"),
+            @CacheEvict(value = "workspacesByCreator", allEntries = true),
+            @CacheEvict(value = "workspacesByMembership", allEntries = true),
+            @CacheEvict(value = "workspaceMembers", allEntries = true)
     })
     public Optional<Workspace> save(@NotNull @Valid Workspace workspace) {
         // Input validation
@@ -200,7 +203,10 @@ public class WorkspaceRepositoryAdapter implements WorkspaceRepository {
             @CacheEvict(value = "workspaces", key = "#workspaceId.value"),
             @CacheEvict(value = "workspacesByUser", allEntries = true),
             @CacheEvict(value = "workspaceExists", key = "#workspaceId.value"),
-            @CacheEvict(value = "workspaceExistsByName", allEntries = true)
+            @CacheEvict(value = "workspaceExistsByName", allEntries = true),
+            @CacheEvict(value = "workspacesByCreator", allEntries = true),
+            @CacheEvict(value = "workspacesByMembership", allEntries = true),
+            @CacheEvict(value = "workspaceMembers", key = "#workspaceId.value + '-*'")
     })
     public void delete(@NotNull WorkspaceId workspaceId) {
         workspaceValidator.validateWorkspaceId(workspaceId);
@@ -241,6 +247,8 @@ public class WorkspaceRepositoryAdapter implements WorkspaceRepository {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    @Cacheable(value = "workspacesByCreator", key = "#creatorId.value + '-' + #pageRequest.pageNumber + '-' + #pageRequest.pageSize")
     public PageResponse<Workspace> findAllByCreator(UserId creatorId, PageRequest pageRequest) {
         Pageable pageable = paginationMapper.toSpringPageable(pageRequest);
         Page<WorkspaceEntity> entityPage = workspaceJpaRepo.findAllByCreatorId(creatorId.getValue(), pageable);
@@ -251,7 +259,10 @@ public class WorkspaceRepositoryAdapter implements WorkspaceRepository {
         return PageResponse.of(workspaces, pageRequest, entityPage.getTotalElements());
     }
 
+    //find workspaces where user is member of
     @Override
+    @Transactional(readOnly = true)
+    @Cacheable(value = "workspacesByMembership", key = "#userId.value + '-' + #pageRequest.pageNumber + '-' + #pageRequest.pageSize")
     public PageResponse<Workspace> findAllByMembership(UserId userId, PageRequest pageRequest) {
         Pageable pageable=paginationMapper.toSpringPageable(pageRequest);
         Page<WorkspaceEntity> entityPage= workspaceJpaRepo.findAllUserMembershipWorkspaces(userId.getValue(), pageable);
@@ -268,6 +279,8 @@ public class WorkspaceRepositoryAdapter implements WorkspaceRepository {
     }*/
 
     @Override
+    @Transactional(readOnly = true)
+    @Cacheable(value = "workspaceMembers", key = "#workspaceId.value + '-' + #pageRequest.pageNumber + '-' + #pageRequest.pageSize")
     public PageResponse<WorkspaceMember> findMembersByWorkspaceId(WorkspaceId workspaceId,PageRequest pageRequest) {
         Pageable pageable=paginationMapper.toSpringPageable(pageRequest);
         Page<WorkspaceMemberEntity> entityPage=workspaceJpaRepo.findByWorkspace_WorkspaceId(workspaceId.getValue(), pageable);
@@ -275,6 +288,26 @@ public class WorkspaceRepositoryAdapter implements WorkspaceRepository {
                 .map(workspaceMemberMapper::toDomain)
                 .collect(Collectors.toList());
         return PageResponse.of(members, pageRequest, entityPage.getTotalElements());
+    }
+
+    @Override
+    @Cacheable(value = "workspaceNameExists", key = "#workspaceName.value + '_' + #creatorId.value")
+    public boolean existsByNameAndCreator(WorkspaceName workspaceName, UserId creatorId) {
+        try {
+            log.debug("Checking if workspace exists: name={}, creator={}",
+                    workspaceName.getValue(), creatorId.getValue());
+
+            return workspaceJpaRepo.existsByWorkspaceNameAndCreatedBy(
+                    workspaceName.getValue(),
+                    creatorId.getValue()
+            );
+
+        } catch (DataAccessException e) {
+            log.error("Error checking workspace existence: name={}, creator={}",
+                    workspaceName.getValue(), creatorId.getValue(), e);
+            throw new WorkspacePersistenceException(
+                    "Error checking workspace existence", e);
+        }
     }
 
 

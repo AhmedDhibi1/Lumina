@@ -22,8 +22,23 @@ spring:
       port: 6379
       password:
 
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: all
+      retries: 3
+      properties:
+        enable.idempotence: true
+        max.in.flight.requests.per.connection: 5
+
 logging:
   level:
     com.snapshot.lumina: DEBUG
     org.springframework.cache: DEBUG
     org.hibernate.SQL: DEBUG
+
+kafka:
+  topics:
+    workspace-created: workspace.created

@@ -34,4 +34,6 @@ public interface WorkspaceRepository {
     // Query methods for members within workspace context
     PageResponse<WorkspaceMember> findMembersByWorkspaceId(WorkspaceId workspaceId,PageRequest pageRequest);
 
+    boolean existsByNameAndCreator(WorkspaceName workspaceName, UserId creatorId);
+
 }

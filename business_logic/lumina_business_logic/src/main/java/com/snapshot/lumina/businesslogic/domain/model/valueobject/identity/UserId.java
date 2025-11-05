@@ -12,4 +12,8 @@ public class UserId {
     public UserId(UUID value) {
         this.value = value;
     }
+
+    public static UserId of(UUID userId) {
+        return new UserId(userId);
+    }
 }

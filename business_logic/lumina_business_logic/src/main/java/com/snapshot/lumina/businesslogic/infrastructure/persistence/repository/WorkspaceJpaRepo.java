@@ -44,4 +44,6 @@ public interface WorkspaceJpaRepo extends JpaRepository<WorkspaceEntity, UUID> {
     boolean existsByWorkspaceName(String workspaceName);
 
     Page<WorkspaceMemberEntity> findByWorkspace_WorkspaceId(UUID workspaceId, Pageable pageable);
+
+    boolean existsByWorkspaceNameAndCreatedBy(String value, UUID value1);
 }
