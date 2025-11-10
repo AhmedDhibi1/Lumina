@@ -42,3 +42,7 @@ logging:
 kafka:
   topics:
     workspace-created: workspace.created
+
+
+api:
+  version: v1
