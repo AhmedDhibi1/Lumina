@@ -4,18 +4,14 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import lumina.snapshot.authservice.dto.ApiResponse;
-import lumina.snapshot.authservice.dto.LoginRequest;
-import lumina.snapshot.authservice.dto.TokenResponse;
-import lumina.snapshot.authservice.dto.UserInfoResponse;
+import lumina.snapshot.authservice.dto.*;
 import lumina.snapshot.authservice.exception.AuthenticationException;
+import lumina.snapshot.authservice.exception.RegistrationException;
 import lumina.snapshot.authservice.service.auth.AuthService;
 import lumina.snapshot.authservice.util.CookieUtil;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
