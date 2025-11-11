@@ -27,7 +27,7 @@ public class AuthController {
             @Valid @RequestBody LoginRequest request,
             HttpServletResponse response) {
 
-        log.info("Login attempt for user: {}", request.getUsername());
+        log.info("Login attempt for user: {}", request.getEmail());
 
         try {
             TokenResponse tokenResponse = authService.login(request);
@@ -39,17 +39,17 @@ public class AuthController {
             // Get user info
             UserInfoResponse userInfo = authService.getUserInfo(tokenResponse.getAccessToken());
 
-            log.info("Login successful for user: {}", request.getUsername());
+            log.info("Login successful for user: {}", request.getEmail());
 
             return ResponseEntity.ok(ApiResponse.<UserInfoResponse>builder()
                     .success(true)
-                    .message("Login successful")
+                    .message("Login successful. Welcome back!")
                     .data(userInfo)
                     .build());
 
         } catch (Exception e) {
-            log.error("Login failed for user: {}", request.getUsername(), e);
-            throw new AuthenticationException("Login failed: " + e.getMessage());
+            log.error("Login failed for user: {}", request.getEmail(), e);
+            throw new AuthenticationException("Login failed. Please check your email and password.", "LOGIN_FAILED");
         }
     }
 
@@ -57,22 +57,22 @@ public class AuthController {
     public ResponseEntity<ApiResponse<String>> register(
             @Valid @RequestBody RegisterRequest request) {
 
-        log.info("Registration attempt for user: {}", request.getUsername());
+        log.info("Registration attempt for user: {}", request.getEmail());
 
         try {
             authService.register(request);
 
-            log.info("Registration successful for user: {}", request.getUsername());
+            log.info("Registration successful for user: {}", request.getEmail());
 
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(ApiResponse.<String>builder()
                             .success(true)
-                            .message("Registration successful. Please login.")
+                            .message("Registration successful! Your account has been created. Please login with your email and password.")
                             .build());
 
         } catch (Exception e) {
-            log.error("Registration failed for user: {}", request.getUsername(), e);
-            throw new RegistrationException("Registration failed: " + e.getMessage());
+            log.error("Registration failed for user: {}", request.getEmail(), e);
+            throw new RegistrationException("Registration failed. " + e.getMessage(), "REGISTRATION_FAILED");
         }
     }
 
