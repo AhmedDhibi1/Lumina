@@ -1,5 +1,6 @@
 package lumina.snapshot.authservice.controller;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -7,6 +8,7 @@ import lumina.snapshot.authservice.dto.*;
 import lumina.snapshot.authservice.exception.AuthenticationException;
 import lumina.snapshot.authservice.service.auth.AuthService;
 import lumina.snapshot.authservice.service.keycloak.KeycloakService;
+import lumina.snapshot.authservice.util.CookieUtil;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +24,7 @@ public class UserController {
     
     private final KeycloakService keycloakService;
     private final AuthService authService;
+    private final CookieUtil cookieUtil;
     
     /**
      * Get current user profile
@@ -110,9 +113,10 @@ public class UserController {
      * Change user password
      */
     @PostMapping("/change-password")
-    public ResponseEntity<ApiResponse<Void>> changePassword(
+    public ResponseEntity<ApiResponse<AuthResponse>> changePassword(
             @CookieValue(name = "accessToken") String accessToken,
-            @Valid @RequestBody ChangePasswordRequest request) {
+            @Valid @RequestBody ChangePasswordRequest request,
+            HttpServletResponse response) {
         
         log.info("Changing user password");
         
@@ -135,9 +139,27 @@ public class UserController {
             
             log.info("Password changed successfully for user: {}", userId);
             
-            return ResponseEntity.ok(ApiResponse.<Void>builder()
+            // Auto-login with new password to get fresh tokens
+            LoginRequest newLoginRequest = new LoginRequest(userInfo.getEmail(), request.getNewPassword());
+            TokenResponse tokenResponse = authService.login(newLoginRequest);
+            
+            // Set new tokens in HTTP-only cookies
+            cookieUtil.addAccessTokenCookie(response, tokenResponse.getAccessToken());
+            cookieUtil.addRefreshTokenCookie(response, tokenResponse.getRefreshToken());
+            
+            // Get updated user info
+            UserInfoResponse updatedUserInfo = authService.getUserInfo(tokenResponse.getAccessToken());
+            
+            // Return both user info and tokens in response body
+            AuthResponse authResponse = AuthResponse.builder()
+                    .user(updatedUserInfo)
+                    .tokens(tokenResponse)
+                    .build();
+            
+            return ResponseEntity.ok(ApiResponse.<AuthResponse>builder()
                     .success(true)
-                    .message("Password changed successfully. Please login with your new password.")
+                    .message("Password changed successfully. You are now logged in with your new password.")
+                    .data(authResponse)
                     .build());
             
         } catch (AuthenticationException e) {

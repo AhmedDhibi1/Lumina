@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lumina.snapshot.authservice.dto.ApiResponse;
+import lumina.snapshot.authservice.dto.AuthResponse;
 import lumina.snapshot.authservice.dto.TokenResponse;
 import lumina.snapshot.authservice.dto.UserInfoResponse;
 import lumina.snapshot.authservice.exception.AuthenticationException;
@@ -25,7 +26,7 @@ public class TokenController {
     private final CookieUtil cookieUtil;
 
     @PostMapping("/refresh")
-    public ResponseEntity<ApiResponse<UserInfoResponse>> refresh(
+    public ResponseEntity<ApiResponse<AuthResponse>> refresh(
             @CookieValue(name = "refreshToken") String refreshToken,
             HttpServletResponse response) {
 
@@ -43,10 +44,16 @@ public class TokenController {
 
             log.info("Token refresh successful");
 
-            return ResponseEntity.ok(ApiResponse.<UserInfoResponse>builder()
+            // Return both user info and tokens in response body
+            AuthResponse authResponse = AuthResponse.builder()
+                    .user(userInfo)
+                    .tokens(tokenResponse)
+                    .build();
+
+            return ResponseEntity.ok(ApiResponse.<AuthResponse>builder()
                     .success(true)
                     .message("Token refreshed successfully")
-                    .data(userInfo)
+                    .data(authResponse)
                     .build());
 
         } catch (Exception e) {
