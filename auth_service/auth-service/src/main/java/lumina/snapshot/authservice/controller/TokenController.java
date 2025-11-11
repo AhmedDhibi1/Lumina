@@ -28,7 +28,7 @@ public class TokenController {
     private final TokenService tokenService;
     private final CookieUtil cookieUtil;
 
-    @PostMapping("/refresh")
+    @PostMapping("/refresh") 
     public ResponseEntity<ApiResponse<AuthResponse>> refresh(
             @CookieValue(name = "refreshToken") String refreshToken,
             HttpServletResponse response) {
