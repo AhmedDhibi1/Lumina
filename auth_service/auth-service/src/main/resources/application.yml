@@ -7,10 +7,10 @@ spring:
 
 keycloak:
   realm: lumina
-  auth-server-url: http://localhost:8180
+  auth-server-url: ${AUTH_SERVER_URL}
   resource: auth-service-client
   credentials:
-    secret: ${KEYCLOAK_CLIENT_SECRET:your-client-secret-here}
+    secret: ${KEYCLOAK_CLIENT_SECRET}
   ssl-required: external
   public-client: false
   confidential-port: 0

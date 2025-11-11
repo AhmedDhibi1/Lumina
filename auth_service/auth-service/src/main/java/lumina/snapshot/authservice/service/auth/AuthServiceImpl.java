@@ -42,7 +42,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public TokenResponse login(LoginRequest request) {
-        log.debug("Attempting login for user: {}", request.getUsername());
+        log.debug("Attempting login for user: {}", request.getEmail());
 
         String tokenUrl = String.format("%s/realms/%s/protocol/openid-connect/token",
                 authServerUrl, realm);
@@ -54,7 +54,7 @@ public class AuthServiceImpl implements AuthService {
         formData.add("grant_type", "password");
         formData.add("client_id", clientId);
         formData.add("client_secret", clientSecret);
-        formData.add("username", request.getUsername());
+        formData.add("username", request.getEmail());  // Use email as username
         formData.add("password", request.getPassword());
 
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(formData, headers);
@@ -66,6 +66,9 @@ public class AuthServiceImpl implements AuthService {
             Map body = response.getBody();
 
             assert body != null;
+
+            log.info("Login successful for user: {}", request.getEmail());
+
             return TokenResponse.builder()
                     .accessToken((String) body.get("access_token"))
                     .refreshToken((String) body.get("refresh_token"))
@@ -75,18 +78,18 @@ public class AuthServiceImpl implements AuthService {
                     .build();
 
         } catch (Exception e) {
-            log.error("Login failed for user: {}", request.getUsername(), e);
-            throw new AuthenticationException("Invalid credentials");
+            log.error("Login failed for user: {}", request.getEmail(), e);
+            throw new AuthenticationException("Invalid email or password. Please check your credentials.", "INVALID_CREDENTIALS");
         }
     }
 
     @Override
     public void register(RegisterRequest request) {
-        log.debug("Attempting registration for user: {}", request.getUsername());
+        log.debug("Attempting registration for user: {}", request.getEmail());
 
         try {
             UserRepresentation user = new UserRepresentation();
-            user.setUsername(request.getUsername());
+            user.setUsername(request.getEmail());  // Use email as username
             user.setEmail(request.getEmail());
             user.setFirstName(request.getFirstName());
             user.setLastName(request.getLastName());
@@ -103,11 +106,14 @@ public class AuthServiceImpl implements AuthService {
             // Create user in Keycloak
             keycloakClient.realm(realm).users().create(user);
 
-            log.info("User registered successfully: {}", request.getUsername());
+            log.info("User registered successfully: {}", request.getEmail());
 
         } catch (Exception e) {
-            log.error("Registration failed for user: {}", request.getUsername(), e);
-            throw new RegistrationException("Registration failed: " + e.getMessage());
+            log.error("Registration failed for user: {}", request.getEmail(), e);
+            if (e.getMessage() != null && e.getMessage().contains("409")) {
+                throw new RegistrationException("User with this email already exists.", "USER_EXISTS");
+            }
+            throw new RegistrationException("Registration failed. Please try again.", "REGISTRATION_ERROR");
         }
     }
 
