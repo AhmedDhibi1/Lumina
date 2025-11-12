@@ -17,6 +17,7 @@ keycloak:
   public-client: false
   confidential-port: 0
   use-resource-role-mappings: false
+  default-user-role: USER  # Default role assigned to new users
 
 jwt:
   cookie:

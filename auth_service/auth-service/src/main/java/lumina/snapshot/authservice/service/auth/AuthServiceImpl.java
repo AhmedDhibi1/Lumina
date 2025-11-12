@@ -8,6 +8,7 @@ import lumina.snapshot.authservice.dto.TokenResponse;
 import lumina.snapshot.authservice.dto.UserInfoResponse;
 import lumina.snapshot.authservice.exception.AuthenticationException;
 import lumina.snapshot.authservice.exception.RegistrationException;
+import lumina.snapshot.authservice.service.keycloak.KeycloakService;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
@@ -18,6 +19,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import jakarta.ws.rs.core.Response;
 import java.util.Collections;
 import java.util.Map;
 
@@ -26,6 +28,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
     private final Keycloak keycloakClient;
+    private final KeycloakService keycloakService;
     private final RestTemplate restTemplate = new RestTemplate();
 
     @Value("${keycloak.auth-server-url}")
@@ -39,6 +42,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Value("${keycloak.credentials.secret}")
     private String clientSecret;
+
+    @Value("${keycloak.default-user-role:USER}")
+    private String defaultUserRole;
 
     @Override
     public TokenResponse login(LoginRequest request) {
@@ -104,9 +110,27 @@ public class AuthServiceImpl implements AuthService {
             user.setCredentials(Collections.singletonList(credential));
 
             // Create user in Keycloak
-            keycloakClient.realm(realm).users().create(user);
+            Response response = keycloakClient.realm(realm).users().create(user);
 
-            log.info("User registered successfully: {}", request.getEmail());
+            // Get the created user ID from the response
+            if (response.getStatus() == 201) {
+                String userId = response.getLocation().getPath().replaceAll(".*/([^/]+)$", "$1");
+                log.info("User registered successfully with ID: {}", userId);
+
+                // Assign default USER role
+                try {
+                    keycloakService.assignRealmRole(userId, defaultUserRole);
+                    log.info("Default role '{}' assigned to user: {}", defaultUserRole, request.getEmail());
+                } catch (Exception roleException) {
+                    log.error("Failed to assign role to user: {}", request.getEmail(), roleException);
+                    // Don't fail registration if role assignment fails, just log the error
+                }
+            } else {
+                log.error("Failed to create user. Status: {}", response.getStatus());
+                throw new RegistrationException("Registration failed. Please try again.", "REGISTRATION_ERROR");
+            }
+
+            response.close();
 
         } catch (Exception e) {
             log.error("Registration failed for user: {}", request.getEmail(), e);

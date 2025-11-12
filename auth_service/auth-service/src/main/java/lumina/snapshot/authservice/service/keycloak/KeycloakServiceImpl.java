@@ -7,6 +7,7 @@ import lumina.snapshot.authservice.exception.RegistrationException;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
+import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -147,6 +148,37 @@ public class KeycloakServiceImpl implements KeycloakService {
         } catch (Exception e) {
             log.error("Error checking if user exists with email: {}", email, e);
             return false;
+        }
+    }
+
+    @Override
+    public void assignRealmRole(String userId, String roleName) {
+        log.info("Assigning realm role '{}' to user: {}", roleName, userId);
+
+        try {
+            // Get the role by name from the realm
+            RoleRepresentation role = keycloakClient.realm(realm)
+                    .roles()
+                    .get(roleName)
+                    .toRepresentation();
+
+            // Assign the role to the user
+            keycloakClient.realm(realm)
+                    .users()
+                    .get(userId)
+                    .roles()
+                    .realmLevel()
+                    .add(Collections.singletonList(role));
+
+            log.info("Realm role '{}' assigned successfully to user: {}", roleName, userId);
+
+        } catch (Exception e) {
+            log.error("Error assigning realm role '{}' to user: {}", roleName, userId, e);
+            throw new AuthenticationException(
+                    "Failed to assign role to user: " + e.getMessage(),
+                    "ROLE_ASSIGNMENT_ERROR",
+                    e
+            );
         }
     }
 }
