@@ -7,29 +7,29 @@ spring:
 
 keycloak:
   realm: lumina
-  auth-server-url: ${AUTH_SERVER_URL}
+  auth-server-url: http://localhost:8180
   resource: auth-service-client
   credentials:
-    secret: ${KEYCLOAK_CLIENT_SECRET}
+    secret: test-secret
   ssl-required: external
   public-client: false
   confidential-port: 0
   use-resource-role-mappings: false
-  default-user-role: USER  # Default role assigned to new users
+  default-user-role: USER
 
 jwt:
   cookie:
     access-token:
       name: accessToken
-      max-age: 900  # 15 minutes
+      max-age: 900
       http-only: true
-      secure: false  # true in production
+      secure: false
       same-site: Strict
     refresh-token:
       name: refreshToken
-      max-age: 36000  # 10 hours
+      max-age: 36000
       http-only: true
-      secure: false  # true in production
+      secure: false
       same-site: Strict
 
 cors:
@@ -40,5 +40,4 @@ cors:
 
 logging:
   level:
-    com.lumina.auth: DEBUG
-    org.keycloak: INFO
+    lumina.snapshot.authservice: DEBUG

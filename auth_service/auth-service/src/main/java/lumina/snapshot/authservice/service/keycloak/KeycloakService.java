@@ -48,4 +48,11 @@ public interface KeycloakService {
      * @return true if user exists
      */
     boolean userExistsByEmail(String email);
+
+    /**
+     * Assign realm role to user
+     * @param userId Keycloak user ID
+     * @param roleName name of the realm role to assign
+     */
+    void assignRealmRole(String userId, String roleName);
 }
