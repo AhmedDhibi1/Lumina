@@ -1,0 +1,60 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: auth-service
+  profiles:
+    active: dev
+
+keycloak:
+  realm: lumina
+  auth-server-url: http://localhost:8180
+  resource: auth-service-client
+  credentials:
+    secret: ${KEYCLOAK_CLIENT_SECRET:the-client-secret-here}
+  ssl-required: external
+  public-client: false
+  confidential-port: 0
+  use-resource-role-mappings: false
+
+jwt:
+  cookie:
+    access-token:
+      name: accessToken
+      max-age: 900  # 15 minutes
+      http-only: true
+      secure: false  # false for development, true in production
+      same-site: Strict
+    refresh-token:
+      name: refreshToken
+      max-age: 36000  # 10 hours
+      http-only: true
+      secure: false  # false for development, true in production
+      same-site: Strict
+
+cors:
+  allowed-origins: http://localhost:3000,http://localhost:3001
+  allowed-methods: GET,POST,PUT,DELETE,OPTIONS,PATCH
+  allowed-headers: "*"
+  allow-credentials: true
+
+logging:
+  level:
+    lumina.snapshot.authservice: DEBUG
+    org.keycloak: INFO
+    org.springframework.web: DEBUG
+    org.springframework.security: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# Actuator endpoints
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always

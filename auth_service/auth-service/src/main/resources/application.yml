@@ -1,3 +1,43 @@
+server:
+  port: 8081
+
 spring:
   application:
     name: auth-service
+
+keycloak:
+  realm: lumina
+  auth-server-url: ${AUTH_SERVER_URL}
+  resource: auth-service-client
+  credentials:
+    secret: ${KEYCLOAK_CLIENT_SECRET}
+  ssl-required: external
+  public-client: false
+  confidential-port: 0
+  use-resource-role-mappings: false
+
+jwt:
+  cookie:
+    access-token:
+      name: accessToken
+      max-age: 900  # 15 minutes
+      http-only: true
+      secure: false  # true in production
+      same-site: Strict
+    refresh-token:
+      name: refreshToken
+      max-age: 36000  # 10 hours
+      http-only: true
+      secure: false  # true in production
+      same-site: Strict
+
+cors:
+  allowed-origins: http://localhost:3000
+  allowed-methods: GET,POST,PUT,DELETE,OPTIONS
+  allowed-headers: "*"
+  allow-credentials: true
+
+logging:
+  level:
+    com.lumina.auth: DEBUG
+    org.keycloak: INFO
